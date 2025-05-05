@@ -21,7 +21,7 @@ public class Demofilter implements Filter {
             throws IOException, ServletException {
 
         log.info("拦截到了请求");
-        //房型
+        //放行
         filterChain.doFilter(servletRequest,servletResponse);
     }
 
