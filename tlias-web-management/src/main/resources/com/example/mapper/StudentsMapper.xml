@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.StudentsMapper">
+
+    <select id="studentList" resultType="com.example.pojo.Student">
+        select s.*,c.name clazz_name from clazz c right join student s on s.clazz_id = c.id
+    </select>
+
+    <delete id="deleteStudents">
+        delete from student where id in
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+                            #{id}
+        </foreach>
+    </delete>
+
+    <insert id="addStudent" parameterType="com.example.pojo.Student">
+        insert into student(address, clazz_id, create_time, degree, gender, graduation_date, name, no, phone,
+                            update_time, violation_count, violation_score, id_card, is_college)
+        values (#{address},#{clazzId},#{createTime},#{degree},#{gender},#{graduationDate},#{name},#{no},#{phone},
+                #{updateTime}, #{violationCount}, #{violationScore}, #{idCard}, #{isCollege})
+    </insert>
+
+    <select id="queryStudentById" resultType="com.example.pojo.Student">
+        select s.*, c.name clazzName from student s left join clazz c on s.clazz_id = c.id where s.id=#{id}
+    </select>
+
+    <update id="updateStudent" parameterType="com.example.pojo.Student">
+        update student
+        <set>
+            <if test="name!=null and name!=''"> name=#{name},</if>
+            <if test="no!=null and no!=''"> no=#{no},</if>
+            <if test="gender!=null and gender!=''">gender=#{gender},</if>
+            <if test="phone!=null and phone!=''">phone=#{phone},</if>
+            <if test="degree!=null and degree!=''">degree=#{degree},</if>
+            <if test="idCard!=null and idCard!=''">id_card=#{idCard},</if>
+            <if test="isCollege!=null and isCollege!=''">is_college=#{isCollege},</if>
+            <if test="address!=null and address!=''">address=#{address},</if>
+            <if test="graduationDate!=null">graduation_date=#{graduationDate},</if>
+            <if test="violationCount!=null">violation_count=#{violationCount},</if>
+            <if test="violationScore!=null">violation_score=#{violationScore},</if>
+            <if test="clazzId!=null and clazzId!=''"> clazz_id=#{clazzId},</if>
+        </set>
+        where id =#{id}
+    </update>
+
+    <select id="getStudentDegreeData" resultType="map">
+        SELECT
+            CASE
+                WHEN degree = 1 THEN '初中'
+                WHEN degree = 2 THEN '高中'
+                WHEN degree = 3 THEN '大专'
+                WHEN degree = 4 THEN '本科'
+                WHEN degree = 5 THEN '硕士'
+                END AS name,
+            COUNT(*) AS value
+        FROM student
+        GROUP BY degree
+    </select>
+
+</mapper>

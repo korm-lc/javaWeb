@@ -1,0 +1,7 @@
+# Compiled class file
+/tlias-web-management/target/
+*.class
+
+/tlias-web-management/src/test/
+*.iml
+.idea
